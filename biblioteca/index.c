@@ -92,9 +92,9 @@ int main()
                 printf("Nenhum livro cadastrado.\n");
             }
             break;
-        case 3: 
+        case 3:
             printf("Saindo da biblioteca. Até logo!\n");
             break;
-        }   
+        }
     } while (opcao != 3);
 };
