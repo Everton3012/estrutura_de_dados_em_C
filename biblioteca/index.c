@@ -87,14 +87,17 @@ int main()
                     printf("------------------------------------------\n");
                 }
             }
-            else
-            {
-                printf("Nenhum livro cadastrado.\n");
-            }
+            printf("\nPressione Enter para continuar...");
+            getchar();
             break;
         case 3:
             printf("Saindo da biblioteca. Até logo!\n");
             break;
+        default:
+            printf("Opção inválida. Por favor, tente novamente.\n");
+            printf("\nPrecione Enter para continuar...");
+            getchar();
+
         }
     } while (opcao != 3);
 };
