@@ -8,11 +8,11 @@ typedef struct No
     struct No *proximo;
 } No;
 
-// Protótipos das funções
 void inserirNoInicio(struct No **inicio, int valor);
 void exibirLista(struct No *inicio);
 void liberarLista(struct No **inicio);
-void removerDoInicio(struct No **inicio); // ← ADICIONAR
+void removerDoInicio(struct No **inicio);
+int buscaLinear(struct No *inicio, int valor);
 
 int main()
 {
@@ -22,9 +22,25 @@ int main()
     inserirNoInicio(&lista, 10);
     inserirNoInicio(&lista, 20);
     inserirNoInicio(&lista, 30);
+    inserirNoInicio(&lista, 40);
 
     printf("Lista ligada:\n");
     exibirLista(lista);
+
+    printf("\n--- Buscando elementos ---\n");
+    int valor1 = 20;
+    int resultado1 = buscaLinear(lista, valor1);
+    if (resultado1)
+        printf("Elemento %d encontrado!\n", valor1);
+    else
+        printf("Elemento %d NÃO encontrado.\n", valor1);
+
+    int valor2 = 50;
+    int resultado2 = buscaLinear(lista, valor2);
+    if (resultado2)
+        printf("Elemento %d encontrado!\n", valor2);
+    else
+        printf("Elemento %d NÃO encontrado.\n", valor2);
 
     printf("\nRemovendo o primeiro nó...\n");
     removerDoInicio(&lista);
@@ -84,4 +100,16 @@ void removerDoInicio(struct No **inicio)
     *inicio = (*inicio)->proximo;
     printf("Nó com valor %d removido.\n", temp->valor);
     free(temp);
+}
+
+int buscaLinear(struct No *inicio, int valor)
+{
+    struct No *atual = inicio;
+    while (atual != NULL)
+    {
+        if (atual->valor == valor)
+            return 1;
+        atual = atual->proximo;
+    }
+    return 0;
 }
