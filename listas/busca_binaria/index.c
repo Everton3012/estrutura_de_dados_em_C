@@ -3,6 +3,7 @@
 #include <time.h>
 
 int iteracoes_binaria = 0;
+int iteracoes_binaria_recursiva = 0;
 int iteracoes_linear = 0;
 
 int buscaBinaria(int vetor[], int inicio, int fim, int valor)
@@ -23,6 +24,26 @@ int buscaBinaria(int vetor[], int inicio, int fim, int valor)
             fim = meio - 1;
     }
     return -1;
+}
+
+int buscaBinariaRecursiva(int vetor[], int inicio, int fim, int valor)
+{
+    iteracoes_binaria_recursiva++;
+    
+    if (inicio > fim)
+        return -1;
+
+    int meio = inicio + (fim - inicio) / 2;
+
+    printf("Iteração %d: início=%d, fim=%d, meio=%d, vetor[meio]=%d\n", 
+           iteracoes_binaria_recursiva, inicio, fim, meio, vetor[meio]);
+
+    if (vetor[meio] == valor)
+        return meio;
+    else if (vetor[meio] < valor)
+        return buscaBinariaRecursiva(vetor, meio + 1, fim, valor);
+    else
+        return buscaBinariaRecursiva(vetor, inicio, meio - 1, valor);
 }
 
 int buscaLinear(int vetor[], int tamanho, int valor)
@@ -75,8 +96,8 @@ int main(int argc, char const *argv[])
     printf("Iterações: %d\n", iteracoes_linear);
     printf("Tempo: %.4f ms\n\n", tempo_linear);
 
-    // ===== BUSCA BINÁRIA =====
-    printf("========== BUSCA BINÁRIA ==========\n");
+    // ===== BUSCA BINÁRIA (Iterativa) =====
+    printf("========== BUSCA BINÁRIA (ITERATIVA) ==========\n");
     iteracoes_binaria = 0;
     clock_t inicio_binaria = clock();
     int resultado_binaria = buscaBinaria(vetor, 0, tamanho - 1, valorProcurado);
@@ -92,27 +113,50 @@ int main(int argc, char const *argv[])
     printf("Iterações: %d\n", iteracoes_binaria);
     printf("Tempo: %.4f ms\n\n", tempo_binaria);
 
+    // ===== BUSCA BINÁRIA (Recursiva) =====
+    printf("========== BUSCA BINÁRIA (RECURSIVA) ==========\n");
+    iteracoes_binaria_recursiva = 0;
+    clock_t inicio_binaria_rec = clock();
+    int resultado_binaria_rec = buscaBinariaRecursiva(vetor, 0, tamanho - 1, valorProcurado);
+    clock_t fim_binaria_rec = clock();
+
+    double tempo_binaria_rec = (double)(fim_binaria_rec - inicio_binaria_rec) / CLOCKS_PER_SEC * 1000;
+
+    printf("\n");
+    if (resultado_binaria_rec != -1)
+        printf("✓ Valor %d encontrado no índice %d.\n", valorProcurado, resultado_binaria_rec);
+    else
+        printf("✗ Valor %d não encontrado no vetor.\n", valorProcurado);
+    printf("Iterações: %d\n", iteracoes_binaria_recursiva);
+    printf("Tempo: %.4f ms\n\n", tempo_binaria_rec);
+
     // ===== COMPARAÇÃO =====
     printf("========== COMPARAÇÃO ==========\n");
     printf("Busca Linear:\n");
     printf("  - Iterações: %d\n", iteracoes_linear);
     printf("  - Tempo: %.4f ms\n\n", tempo_linear);
     
-    printf("Busca Binária:\n");
+    printf("Busca Binária (Iterativa):\n");
     printf("  - Iterações: %d\n", iteracoes_binaria);
     printf("  - Tempo: %.4f ms\n\n", tempo_binaria);
+
+    printf("Busca Binária (Recursiva):\n");
+    printf("  - Iterações: %d\n", iteracoes_binaria_recursiva);
+    printf("  - Tempo: %.4f ms\n\n", tempo_binaria_rec);
     
     printf("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
     
     if (tempo_linear > tempo_binaria)
     {
-        printf("Busca Binária foi %.2fx MAIS RÁPIDA!\n", tempo_linear / tempo_binaria);
+        printf("Busca Binária (Iterativa) foi %.2fx MAIS RÁPIDA que Linear!\n", tempo_linear / tempo_binaria);
         printf("Economizou %d iterações!\n", iteracoes_linear - iteracoes_binaria);
     }
+
+    printf("\n");
+    if (tempo_binaria < tempo_binaria_rec)
+        printf("Busca Binária (Iterativa) foi %.2fx MAIS RÁPIDA que Recursiva!\n", tempo_binaria_rec / tempo_binaria);
     else
-    {
-        printf("Busca Linear foi %.2fx MAIS RÁPIDA!\n", tempo_binaria / tempo_linear);
-    }
+        printf("Busca Binária (Recursiva) foi %.2fx MAIS RÁPIDA que Iterativa!\n", tempo_binaria / tempo_binaria_rec);
 
     free(vetor);
     return 0;
